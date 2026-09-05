@@ -5,10 +5,8 @@
 -- Compatible with: MySQL 8.0+ / MariaDB 10.3+
 -- ============================================================
 
--- Drop existing database if exists and create fresh
-DROP DATABASE IF EXISTS `ssmpas`;
-CREATE DATABASE `ssmpas` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `ssmpas`;
+-- InfinityFree: import this file while the target database is selected in phpMyAdmin.
+-- DROP/CREATE/USE DATABASE statements are intentionally omitted.
 
 -- ============================================================
 -- USERS TABLE - Unified authentication for all roles

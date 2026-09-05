@@ -12,7 +12,15 @@ if (isset($_ENV['DATABASE_URL'])) {
     $name = ltrim($db_url['path'], '/');
     $user = $db_url['user'] ?? 'root';
     $pass = $db_url['pass'] ?? '';
+} elseif (file_exists('/home') || getenv('HOME')) {
+    // Production environment (InfinityFree)
+    $host = 'sql101.infinityfree.com';
+    $port = '3306';
+    $name = 'if0_42837559_ssmpas';
+    $user = 'if0_42837559';
+    $pass = 'aksh187807';
 } else {
+    // Local WAMP development
     $host = 'localhost';
     $port = '3306';
     $name = 'ssmpas';
