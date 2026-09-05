@@ -1,26 +1,39 @@
 <?php
 /**
  * Database Configuration - SSMPAS v2.0
- * Supports both local (WAMP) and production (Railway) environments
+ * Supports local (WAMP), Railway, and InfinityFree via environment variables
  */
 
-// Check for Railway DATABASE_URL first, fallback to local config
+// Load .env file if exists (for local development)
+if (file_exists(__DIR__ . '/../.env')) {
+    $lines = file(__DIR__ . '/../.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        if (strpos(trim($line), '#') === 0) continue;
+        $parts = explode('=', $line, 2);
+        if (count($parts) === 2) {
+            $_ENV[trim($parts[0])] = trim($parts[1]);
+        }
+    }
+}
+
+// Priority: Railway (DATABASE_URL) -> InfinityFree/Production env vars -> Local
 if (isset($_ENV['DATABASE_URL'])) {
+    // Railway provides DATABASE_URL
     $db_url = parse_url($_ENV['DATABASE_URL']);
     $host = $db_url['host'] ?? 'localhost';
     $port = $db_url['port'] ?? '3306';
     $name = ltrim($db_url['path'], '/');
     $user = $db_url['user'] ?? 'root';
     $pass = $db_url['pass'] ?? '';
-} elseif (file_exists('/home') || getenv('HOME')) {
-    // Production environment (InfinityFree)
-    $host = 'sql101.infinityfree.com';
-    $port = '3306';
-    $name = 'if0_42837559_ssmpas';
-    $user = 'if0_42837559';
-    $pass = 'aksh187807';
+} elseif (isset($_ENV['DB_HOST'])) {
+    // InfinityFree or custom environment variables
+    $host = $_ENV['DB_HOST'] ?? 'localhost';
+    $port = $_ENV['DB_PORT'] ?? '3306';
+    $name = $_ENV['DB_NAME'] ?? 'ssmpas';
+    $user = $_ENV['DB_USER'] ?? 'root';
+    $pass = $_ENV['DB_PASS'] ?? '';
 } else {
-    // Local WAMP development
+    // Local WAMP development fallback
     $host = 'localhost';
     $port = '3306';
     $name = 'ssmpas';

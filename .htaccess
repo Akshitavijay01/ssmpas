@@ -1,0 +1,12 @@
+RewriteEngine On
+RewriteBase /
+
+# Redirect root to index.php (the app entry point)
+RewriteRule ^$ /index.php [L]
+
+# Serve existing files and directories
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Route everything else to the app
+RewriteRule ^(.*)$ index.php [L,QSA]
